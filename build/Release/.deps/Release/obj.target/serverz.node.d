@@ -1,1 +1,0 @@
-cmd_Release/obj.target/serverz.node := g++ -shared -pthread -rdynamic -m64  -Wl,-soname=serverz.node -o Release/obj.target/serverz.node -Wl,--start-group Release/obj.target/serverz/lib/serverz.o -Wl,--end-group 
