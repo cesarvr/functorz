@@ -5,10 +5,10 @@ using namespace std;
 
 template <typename T>
 void WhatIsThis(T& value){
+    cout << "Is empty: " << value->IsNull() << endl;
     cout << "Is function: " << value->IsFunction() << endl;
     cout << "Is error: " << value->IsNativeError() << endl;
     cout << "Is object: " << value->IsObject() << endl;
-    cout << "Is empty: " << value->IsNull() << endl;
     cout << "Is error: " << value->IsNativeError() << endl;
     
 }
@@ -19,12 +19,15 @@ void Method(const Nan::FunctionCallbackInfo<v8::Value>& info) {
 
 void Compile(const Nan::FunctionCallbackInfo<v8::Value>& args) {
    // v8::Script::Compile(args[0]->ToString());
-   
+  
+    // Create a new context.
+    v8::Local<v8::Context> _ctx = v8::Context::New(args.GetIsolate()); 
+
     v8::ScriptCompiler::Source source(args[0]->ToString());
     auto script = v8::ScriptCompiler::Compile(args.GetIsolate(), &source);
     auto object = Nan::New<v8::Object>();
     
-    auto value = script->Run();
+    auto value = script->Run(_ctx).ToLocalChecked();
     
     WhatIsThis(value);
     
