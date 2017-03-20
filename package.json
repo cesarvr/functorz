@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "bindings": "~1.2.1",
+    "express": "^4.15.2",
     "nan": "^2.0.0"
   },
   "scripts": {

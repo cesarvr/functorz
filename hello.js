@@ -17,6 +17,6 @@ var service = {
 
 console.log('fibunacci ->', fib(10))
 console.log('func.js   ->', func)
-var inject = func.result.bind(os);
+var inject = func.result.bind({os:os});
 
 if (typeof inject === 'function') console.log(inject(5, service, os ));

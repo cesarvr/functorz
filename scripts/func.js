@@ -26,6 +26,12 @@
 		console.log('os.cpus', os.cpus);
 		console.log('os.cpus()', os.cpus());
 
+    console.log('this->', this);
+  	console.log('os', this.os);
+		console.log('os.cpus', this.os.cpus);
+		console.log('os.cpus()', this.os.cpus());
+
+
 	//	internet();
 
     return n * n;

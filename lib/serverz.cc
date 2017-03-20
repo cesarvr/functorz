@@ -37,17 +37,16 @@ void returnToJavascript(v8Arguments& v8argument, v8Value&& value, string message
 void Compile(const Nan::FunctionCallbackInfo<v8::Value>& args) {
     
     v8::ScriptCompiler::Source source(args[0]->ToString());
-    //auto script = v8::ScriptCompiler::Compile(Nan::GetCurrentContext(), &source);
-    auto script = v8::ScriptCompiler::CompileUnboundScript(args.GetIsolate(), &source);
+    auto script = v8::ScriptCompiler::Compile(Nan::GetCurrentContext(), &source);
+    //auto script = v8::ScriptCompiler::CompileUnboundScript(args.GetIsolate(), &source);
 
     if(script.IsEmpty()) {
-
         args.GetReturnValue().SetUndefined();
-        //Nan::ThrowError( "Compiler Error" );
     }else{
         // Create a new context.
-        auto value = script.ToLocalChecked()->BindToCurrentContext()->Run(Nan::GetCurrentContext());
-    
+      //auto value = script.ToLocalChecked()->BindToCurrentContext()->Run(Nan::GetCurrentContext());
+        auto value = script.ToLocalChecked()->Run(Nan::GetCurrentContext());
+        
         WhatIsThis(value);
     
         if(value.IsEmpty())
