@@ -13,8 +13,6 @@
         e.preventDefault();
         var $console = $('.result');
 
-
-        debugger;
         var compiling = $.post('/function', createFn());
         
         compiling.done(function(msg){

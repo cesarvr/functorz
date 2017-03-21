@@ -14,7 +14,7 @@
     <style>
 
       .code {
-        font-size: -webkit-xxx-large;
+        font-size: x-large;
         margin: 0px; 
         min-width: 700px; 
         height: 492px;
@@ -47,10 +47,13 @@
           <div class="form-group">
             <label class="col-md-4 control-label" for="code">Text Area</label>
             <div class="col-md-4">                     
-              <textarea class="form-control code" id="code" name="code" style="height:492px">(n) => {
-    if(n < 0) return 1;
-      return fib(n-1) + fib(n-2);
-}</textarea>
+              <textarea class="form-control code" id="code" name="code" style="height:492px">() =>{
+ function fib(n){
+      if(n < 0) return 1;
+        return fib(n-1) + fib(n-2);
+ }
+   return {result: fib(5) };
+};</textarea>
             </div>
           </div>
 
