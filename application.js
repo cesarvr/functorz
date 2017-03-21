@@ -2,6 +2,7 @@
 
 var express = require('express')
 var functor = require('./build/Debug/serverz');
+var basic_adapter = require('./lib/adapters/basic');
 var _ = require('underscore');
 var bodyParser = require('body-parser')
 var app = express()
@@ -18,31 +19,49 @@ app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
 
 var fmap = {};
 
+var add_router = function(options) {
+    app[options.method]('/' + options.routeName, options.handler);
+    console.log('adding route ->', options.routeName, ' method->', options.method);
+};
+
 app.post('/function', function(req, res) {
 
-    console.log(req.body);
-    if (!_.isUndefined(req.body.code) && !_.isUndefined(req.body.name)) {
+    var code = req.body.code;
+    var fname = req.body.name;
+
+    if (!_.isUndefined(code) && !_.isUndefined(fname)) {
 
         try {
-            fmap[req.body.name] = functor.compile(req.body.code);
-        } catch (e) {
 
+            var fx = functor.compile(code);
+
+            fmap[fname] = {
+                compiled: fx,
+                source: code
+            };
+
+            add_router({
+                routeName: fname,
+                method: 'get',
+                handler: basic_adapter(fx)
+            });
+
+        } catch (e) {
             res.status(406).send({
                 result: ERROR_MSG_2 + e
             });
         }
 
-        console.log('compiled result->', fmap[req.body.name]);
+        console.log('compiled result->', fmap[fname]);
 
         res.send({
-            result: req.body.name + MSG_COMPILE_STORE
+            result: fname + MSG_COMPILE_STORE
         });
 
     } else
         res.status(406).send({
             result: ERROR_MSG_1
         });
-
 })
 
 

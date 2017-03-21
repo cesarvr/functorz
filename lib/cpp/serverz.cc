@@ -20,10 +20,6 @@ void WhatIsThis(T& maybeValue){
         cout << "the value is null: maybe compiler error or empty source code" << endl;
 }
 
-void Method(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  info.GetReturnValue().Set(Nan::New("world").ToLocalChecked());
-}
-
 template <typename v8Arguments, typename v8Value>
 void returnToJavascript(v8Arguments& v8argument, v8Value&& value, string message = "result"){
     
@@ -56,10 +52,7 @@ void Compile(const Nan::FunctionCallbackInfo<v8::Value>& args) {
     }
 }
 
-
 void Init(v8::Local<v8::Object> exports) {
-  exports->Set(Nan::New("hello").ToLocalChecked(),
-               Nan::New<v8::FunctionTemplate>(Method)->GetFunction());
     
   exports->Set(Nan::New("compile").ToLocalChecked(),
                  Nan::New<v8::FunctionTemplate>(Compile)->GetFunction());
