@@ -6,8 +6,11 @@
   "private": true,
   "dependencies": {
     "bindings": "~1.2.1",
+    "body-parser": "^1.17.1",
     "express": "^4.15.2",
-    "nan": "^2.0.0"
+    "lodash": "^4.17.4",
+    "nan": "^2.0.0",
+    "underscore": "^1.8.3"
   },
   "scripts": {
     "test": "node hello.js"
