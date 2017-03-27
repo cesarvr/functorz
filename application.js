@@ -73,7 +73,7 @@ app.get('/function', function(req, res) {
 
 app.get('/function/:id', function(req, res) {
   console.log('function->', req.params.id);
-  var id = req.params:id; 
+  var id = req.params.id;
 
   console.log('looking for: ', fmap[id]);
 
