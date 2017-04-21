@@ -22,7 +22,7 @@ node application.js ## run the server
 After that just visit the localhost:8080 and you would see a rudimentary IDE to writing your functions.
 
 
-### Modules
+### Modules
 
  - lib/cpp/serverz.cc
   - this class take care of interfacing with v8 capabilities for now, it compiles and execute javascript functions.
