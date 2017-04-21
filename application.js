@@ -10,6 +10,7 @@ var app = express()
 const ERROR_MSG_1 = "Missing parameters in the request call, this service accept {code:<string with javascript code>, name:<function name> }";
 const ERROR_MSG_2 = "Error at compile time: ";
 const MSG_COMPILE_STORE = ' has been compiled and is ready to use.';
+const PORT = 8080;
 
 app.use(express.static('public'))
 app.use(bodyParser.json()); // to support JSON-encoded bodies
@@ -17,12 +18,33 @@ app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
     extended: true
 }));
 
-var fmap = {};
+let FxCollection = function(app){
+  var funcs = {};
 
-var add_router = function(options) {
-    app[options.method]('/' + options.routeName, options.handler);
-    console.log('adding route ->', options.routeName, ' method->', options.method);
-};
+  this.get = (id) => funcs[id];
+
+  this.list = () => Object.keys(funcs);
+
+  this.mount = function(fn){
+
+    app[fn.method]('/' + fn.name, fn.handler);
+
+  }
+
+  this.add = function(fn){
+    var handler = basic_adapter(fn.compiled)
+    fn.handler = handler;
+    funcs[fn.name] = fn;
+
+    this.mount(fn);
+  }
+}
+
+var fxs = new FxCollection(app);
+
+app.get('/function', (req, res) => {
+  res.status(200).send({'functions': fxs.list() });
+})
 
 app.post('/function', function(req, res) {
 
@@ -35,15 +57,15 @@ app.post('/function', function(req, res) {
 
             var fx = functor.compile(code);
 
-            fmap[fname] = {
-                compiled: fx,
-                source: code
-            };
-
-            add_router({
-                routeName: fname,
+            fxs.add({
+                name: fname,
                 method: 'get',
-                handler: basic_adapter(fx)
+                source: code,
+                compiled: fx
+            });
+
+            res.send({
+                result: fname + MSG_COMPILE_STORE
             });
 
         } catch (e) {
@@ -52,33 +74,25 @@ app.post('/function', function(req, res) {
             });
         }
 
-        console.log('compiled result->', fmap[fname]);
-
-        res.send({
-            result: fname + MSG_COMPILE_STORE
-        });
-
-    } else
+    } else {
         res.status(406).send({
             result: ERROR_MSG_1
         });
+    }
 })
-
-
-app.get('/function', function(req, res) {
-
-  Object.keys(fmap).map
-})
-
 
 app.get('/function/:id', function(req, res) {
   console.log('function->', req.params.id);
   var id = req.params.id;
 
-  console.log('looking for: ', fmap[id]);
-
+  if(!_.isUndefined(id)){
+    console.log('looking for: ', fxs.get(id));
+    res.send(fxs.get(id));
+  }else {
+    res.status(404).send({});
+  }
 })
 
-app.listen(8080, function() {
-    console.log('Example app listening on port 8080!')
+app.listen(PORT, function() {
+    console.log('λ Functor  -> listening in ', PORT)
 })

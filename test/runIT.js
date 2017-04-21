@@ -8,4 +8,4 @@ function fib(n){
 };
 
 console.log('serverz.run => ', serverz.run)
-console.log('serverz.run (running fib(5)) => ', serverz.run(fib, [5])); 
+console.log('serverz.run (running fib(40)) => ', serverz.run(fib, [40])); 

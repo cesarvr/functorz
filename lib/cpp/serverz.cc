@@ -1,7 +1,8 @@
 #include "nan.h"
 #include <iostream>
 #include <vector>
-
+#include <thread>
+#include <ctime>
 
 
 using namespace std;
@@ -9,9 +10,29 @@ using LocalValue = v8::Local<v8::Value>;
 using LocalArray = v8::Local<v8::Array>;
 using LocalFunction =  v8::Local<v8::Function>;
 
+
+struct Jail {
+    
+    template <typename Caller>
+    auto call(Caller& fn) -> decltype(fn()){
+        start = std::clock();
+        auto ret = fn();
+        duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+        std::cout<<"printf: "<< duration <<'\n';
+        
+        return ret;
+    }
+    
+private:
+    std::clock_t start;
+    double duration;
+};
+
 template <typename T>
 void WhatIsThis(T& maybeValue){
     
+    
+
     cout << "checking value type" << endl;
     cout << "===================" << endl;
     
@@ -38,15 +59,16 @@ void returnToJavascript(v8Arguments& v8argument, v8Value&& value, string message
 
 void Compile(const Nan::FunctionCallbackInfo<v8::Value>& args) {
     
+    cout << "compiling...." << endl;
+    cout << "===================" << endl;
+    
     v8::ScriptCompiler::Source source(args[0]->ToString());
     auto script = v8::ScriptCompiler::Compile(Nan::GetCurrentContext(), &source);
-    //auto script = v8::ScriptCompiler::CompileUnboundScript(args.GetIsolate(), &source);
-
+   
     if(script.IsEmpty()) {
         args.GetReturnValue().SetUndefined();
     }else{
         // Create a new context.
-      //auto value = script.ToLocalChecked()->BindToCurrentContext()->Run(Nan::GetCurrentContext());
         auto value = script.ToLocalChecked()->Run(Nan::GetCurrentContext());
         
         WhatIsThis(value);
@@ -80,23 +102,51 @@ void RunIt(const Nan::FunctionCallbackInfo<v8::Value>& arg){
         }
         
         cout << " Transforming V8::Array to vector (end)" << endl;
-
+        cout << " Locking v8" << endl;
+        v8::Locker locker(Nan::GetCurrentContext()->GetIsolate());
+        cout << " Locking v8, it Will be released at the end (end)" << endl;
         
-        auto recvValue = Nan::New("OmG!!!").ToLocalChecked();
+        cout << " creating Lambda " << endl;
+      
+        auto fn = [&fx, &argc, &_argv](){
+            cout << "executing...." << endl;
+            LocalValue rec = Nan::New("Hellow").ToLocalChecked();
+            
+            cout << "calling..." << endl;
+            return fx->Call(Nan::GetCurrentContext(),
+                            rec, argc, _argv.get());
+        };
         
-        cout << " Calling Method " << endl;
+      
+    
+        Jail jail;
         
-        cout << "Size " << argc << endl;
+        auto ret = jail.call(fn);
         
-        auto ret = fx->Call(Nan::GetCurrentContext(), recvValue, argc, _argv.get());
+        /*
+        
+        auto ret = fx->Call(Nan::GetCurrentContext(),
+                  rec, argc, _argv.get());
+        
+         */
+        
+        cout << " creating Lambda (end) " << endl;
+        
+        cout << " running in new thread " << endl;
+    
+        /*
+        thread th{fn};
+        th.join();
+        */
+        cout << " running in new thread (end)" << endl;
         
         cout << " Calling Method (end) " << endl;
         
-        if(ret.IsEmpty())
+        if(ret.IsEmpty()) {
              arg.GetReturnValue().SetUndefined();
-        else
-
+        } else {
             arg.GetReturnValue().Set(ret.ToLocalChecked());
+        }
     }else
         Nan::ThrowError("Missing Parameters: run(Function, Array) signature is expected.");
 }
