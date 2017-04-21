@@ -25,7 +25,7 @@ After that just visit the localhost:8080 and you would see a rudimentary IDE to 
 ### Modules
 
  - lib/cpp/serverz.cc
-  - this class take care of interfacing with v8 capabilities for now, it compiles and execute javascript functions.
+  - This class take care of interfacing with v8 capabilities, for now it just compiles javascript source code and pass it to the Javascript VM at runtime and is capable to execute javascript functions passed from runtime, this can be cool for experimentation like execute JS functions using another v8::Isolate, thread or try other tricks in the future.
 
  - application.js
    - For demo purposes this is just a simple class that creates a express.js server, and bind hot compiled functions to routers with the same function name.
