@@ -31,7 +31,6 @@ After that just visit the localhost:8080 and you would see a rudimentary IDE to 
    - For demo purposes this is just a simple class that creates a express.js server, and bind hot compiled functions to routers with the same function name.
 
    ```
-     example:
      var fib = functor.compile(fib_code_string);    
      app.router('fib', fib);
    ```  
