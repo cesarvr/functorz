@@ -16,7 +16,7 @@ using Arguments = const Nan::FunctionCallbackInfo<v8::Value>&;
 
 
 const string COMPILE_ERROR = "Error compiling: ";
-
+const string INVALID_PARAMETERS = "Invalid parameters";
 
 template <typename T>
 Local<T>
@@ -61,7 +61,7 @@ void toFunction(Arguments args) {
 Local<Value> runFunction(Arguments arg){
   
     if(!arg[0]->IsFunction() && !arg[1]->IsArray())
-        throw "Invalid parameters";
+        throw INVALID_PARAMETERS;
     
     auto funk = arg[0].As<v8::Function>();
     auto arguments = arg[1].As<v8::Array>();
