@@ -2,9 +2,12 @@
   "targets": [
     {
       "target_name": "serverz",
-      "sources": [ "lib/cpp/serverz.cc" ],
+      "sources": [ "src/serverz.cc" ],
       "include_dirs": [
-        "<!(node -e \"require('nan')\")" ],
+        "<!(node -e \"require('nan')\")",
+        "src/include/" 
+
+        ],
 
         "conditions": [
             ['OS=="mac"', {
@@ -13,7 +16,7 @@
                     "defines": [
                         "__MACOSX_CORE__"
                     ],
-                    
+
                     "xcode_settings": {
                         "OTHER_CPLUSPLUSFLAGS": ["-std=c++11", "-stdlib=libc++"],
                         "OTHER_LDFLAGS": ["-stdlib=libc++"],

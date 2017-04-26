@@ -15,5 +15,8 @@
   "scripts": {
     "test": "node hello.js"
   },
-  "gypfile": true
+  "gypfile": true,
+  "devDependencies": {
+    "chai": "^3.5.0"
+  }
 }

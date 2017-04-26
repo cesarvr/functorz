@@ -91,7 +91,7 @@ app.get('/function/:id', function(req, res) {
   }else {
     res.status(404).send({});
   }
-})
+});
 
 app.listen(PORT, function() {
     console.log('λ Functor  -> listening in ', PORT)
