@@ -13,8 +13,13 @@
 #include <iostream>
 #include <ctime>
 
+
+
 using namespace v8;
 using namespace std;
+
+using LocalValue = v8::Local<v8::Value>;
+using LocalArray = v8::Local<v8::Array>;
 
 struct Jail {
     
@@ -51,7 +56,29 @@ public:
     
         return message + getMessageFromTry(try_catch);
     }
+    
+    
+    static string PB(int d){
+        return d>0?"YES":"NO";
+    }
+    
+    static unique_ptr<LocalValue> getArray(LocalArray&& v8array){
+        uint32_t len = v8array->Length();
+        auto list = unique_ptr<LocalValue>(new LocalValue[len]);
+        
+        for(uint32_t index =0; index < len; index++){
+            list.get()[index] = v8array->Get(index);
+        }
+        
+        return list;
+    }
+    
+    
+    
 };
+
+
+
 
 
 
