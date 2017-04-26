@@ -59,6 +59,7 @@ void toFunction(Arguments args) {
 
 
 Local<Value> runFunction(Arguments arg){
+  
     if(!arg[0]->IsFunction() && !arg[1]->IsArray())
         throw "Invalid parameters";
     
@@ -67,12 +68,13 @@ Local<Value> runFunction(Arguments arg){
     auto argc = arguments->Length();
     auto funk_argument = Helper::getArray(std::move(arguments));
  
-    
+    /*
      cout << "@@@ argc ->" << argc
           << "\n# funk allocated->"
           << Helper::PB(funk_argument.get() != nullptr) << endl
           << "@@ isObject this-> " << Helper::PB(arg[2]->IsObject())
           << endl;
+    */
     
     Local<Object> object;
 
@@ -91,7 +93,7 @@ void RunIt(Arguments arg){
  
     try{
         arg.GetReturnValue().Set(runFunction(arg));
-    }catch(string err){
+    }catch(string err) {
         Nan::ThrowError(err.c_str());
     }
 }

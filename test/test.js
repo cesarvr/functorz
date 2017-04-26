@@ -31,13 +31,12 @@ describe('Array', function() {
 
         it('executing a function successfully', function() {
             var add = (a,b)=>{
-              console.log('printing this content ->', this.x);
+              //console.log('printing this content ->', this.x);
               return a+b;
             };
 
-            var value = funktor.run(add, [1,2], {x:'hellos'}, {x:'gellop'});
-
-            console.log('value returned by execution ', value);
+            var value = funktor.run(add, [1,2], this);
+            assert.equal(value, 3, "function should execute sucessfully");
         });
 
     });
